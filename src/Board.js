@@ -203,6 +203,9 @@
       }
 //want to go from upper right to lower left
       for (var i = colIndex; i > -1; i--) {  //col index as our column index
+        if (!this._isInBounds(colIndex, rowIndex)) {
+          break;
+        }
         if (rows[rowIndex][i] === 1) {
           count++;
           if (count > 1) {

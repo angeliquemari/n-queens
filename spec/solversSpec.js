@@ -5,16 +5,16 @@ describe('solvers', function() {
 
     it('finds a valid solution for n of 1-8', function() {
       _.range(1, 9).map(function(n) {
-        var solutionBoard = new Board(findNRooksSolution(n));
-        var numPieces = _.reduce(solutionBoard.rows(), function(memo, row) {
+        var solutionBoard = new Board(findNRooksSolution(n));  //our function, returns set of arrays to make new board with no conflict
+        var numPieces = _.reduce(solutionBoard.rows(), function(memo, row) { //memo = 0 the accummulator, row = each array, col = value
           return memo + _.reduce(row, function(memo, col) {
             return memo + col;
           }, 0);
-        }, 0);
+        }, 0);    //checking for numbers of pieces on board regardless of conflict configuration
 
-        expect(solutionBoard.get('n')).to.equal(n);
-        expect(numPieces).to.equal(n);
-        expect(solutionBoard.hasAnyRooksConflicts()).to.be.equal(false);
+        expect(solutionBoard.get('n')).to.equal(n); //right size board
+        expect(numPieces).to.equal(n);    // right number of pieces on board
+        expect(solutionBoard.hasAnyRooksConflicts()).to.be.equal(false); //this is checking conflicts here.
       });
     });
 
