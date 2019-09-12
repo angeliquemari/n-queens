@@ -28,10 +28,37 @@ window.findNRooksSolution = function(n) {  //for a given n return ONE valid conf
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) { //retrun the number of valid config for a given n
+window.countNRooksSolutions = function(n) { //return the number of valid config for a given n
+  // helper function
+  var getValidColumnIndexCombos = function (n, prevValidCombos = [[]], colIndexOptions) {  //parameters, colIndexOptions always same
+    var currColumnIndexCombos = [];
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+    if (colIndexOptions === undefined) { //so only build array of options once (like [r,p,s])
+      // var colIndexOptions = Array(n).fill(0).map(function (el, index) { return index; });
+      var colIndexOptions = Array(n).fill(0).map((el, index) => index); // cleaner version of line above
+    }
+
+    for (var i = 0; i < prevValidCombos.length; i++) {
+      for (var j = 0; j < colIndexOptions.length; j++) {
+        // if prevValidCombos[i] (AB) does not include (A) colIndexOptions[j], then compare with B etc. only add if not includes
+        //validity check with our other functions
+        if ( !prevValidCombos[i].includes(colIndexOptions[j]) ) {
+          var combo = prevValidCombos[i].concat(colIndexOptions[j]);
+          currColumnIndexCombos.push(combo);
+        }
+      }
+    }
+
+    if (n > 1) { //recurseion. if 1 then stop
+      currColumnIndexCombos = getValidColumnIndexCombos(n - 1, currColumnIndexCombos, colIndexOptions); //arguments
+    }
+
+    return currColumnIndexCombos;  //all valid combinations
+  }; //helper ends here
+
+  var validColumnIndexCombos = getValidColumnIndexCombos(n); // returns array of combination of column indexes of each rook
+  console.log('Number of solutions for ' + n + ' rooks:', validColumnIndexCombos.length);
+  return validColumnIndexCombos.length;
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
