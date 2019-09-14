@@ -29,32 +29,25 @@ window.findNRooksSolution = function(n) { // return a valid configuration
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   // helper function
-  var getValidColumnIndexCombos = function (n, prevValidCombos = [[]], colIndexOptions) {
+  var getValidColumnIndexCombos = function (n, prevValidCombos, colIndexOptions) {
     var currColumnIndexCombos = [];
-
-    if (colIndexOptions === undefined) { //so only build array of options once (like [r,p,s])
-      var colIndexOptions = Array(n).fill(0).map((item, index) => index);
-    }
-
     for (var i = 0; i < prevValidCombos.length; i++) {
       for (var j = 0; j < colIndexOptions.length; j++) {
         // if prevValidCombos[i] (AB) does not include (A) colIndexOptions[j], then compare with B etc. only add if not includes
-        //validity check with our other functions
         if ( !prevValidCombos[i].includes(colIndexOptions[j]) ) {
           var combo = prevValidCombos[i].concat(colIndexOptions[j]);
           currColumnIndexCombos.push(combo);
         }
       }
     }
-
     if (n > 1) {
       currColumnIndexCombos = getValidColumnIndexCombos(n - 1, currColumnIndexCombos, colIndexOptions);
     }
-
     return currColumnIndexCombos;
-  }; //helper ends here
+  };
 
-  var validColumnIndexCombos = getValidColumnIndexCombos(n); // returns array of combination of column indexes of each rook
+  var indexOptions = Array(n).fill(0).map((item, index) => index); // array filled with 0 to n
+  var validColumnIndexCombos = getValidColumnIndexCombos(n, [[]], indexOptions); // returns array of combination of column indexes of each rook
   console.log('Number of solutions for ' + n + ' rooks:', validColumnIndexCombos.length);
   return validColumnIndexCombos.length;
 };
