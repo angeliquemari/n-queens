@@ -15,7 +15,7 @@
 
 
 
-window.findNRooksSolution = function(n) {  // return a valid configuration
+window.findNRooksSolution = function(n) { // return a valid configuration
   var bigArray = [];
   for (var i = 0; i < n; i++) {
     var innerArray = Array(n).fill(0);
