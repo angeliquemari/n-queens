@@ -15,28 +15,25 @@
 
 
 
-window.findNRooksSolution = function(n) {  //for a given n return ONE valid config
+window.findNRooksSolution = function(n) {  // return a valid configuration
   var bigArray = [];
   for (var i = 0; i < n; i++) {
     var innerArray = Array(n).fill(0);
     innerArray.splice(i, 1, 1);
     bigArray.push(innerArray);
   }
-
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(bigArray));
   return bigArray;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) { //return the number of valid config for a given n
+window.countNRooksSolutions = function(n) {
   // helper function
-  var getValidColumnIndexCombos = function (n, prevValidCombos = [[]], colIndexOptions) {  //parameters, colIndexOptions always same
+  var getValidColumnIndexCombos = function (n, prevValidCombos = [[]], colIndexOptions) {
     var currColumnIndexCombos = [];
 
     if (colIndexOptions === undefined) { //so only build array of options once (like [r,p,s])
-      // var colIndexOptions = Array(n).fill(0).map(function (el, index) { return index; });
-      var colIndexOptions = Array(n).fill(0).map((el, index) => index); // cleaner version of line above
-
+      var colIndexOptions = Array(n).fill(0).map((item, index) => index);
     }
 
     for (var i = 0; i < prevValidCombos.length; i++) {
@@ -50,14 +47,14 @@ window.countNRooksSolutions = function(n) { //return the number of valid config 
       }
     }
 
-    if (n > 1) { //recurseion. if 1 then stop
-      currColumnIndexCombos = getValidColumnIndexCombos(n - 1, currColumnIndexCombos, colIndexOptions); //arguments
+    if (n > 1) {
+      currColumnIndexCombos = getValidColumnIndexCombos(n - 1, currColumnIndexCombos, colIndexOptions);
     }
 
-    return currColumnIndexCombos;  //all valid combinations
+    return currColumnIndexCombos;
   }; //helper ends here
 
-  var validColumnIndexCombos = getValidColumnIndexCombos(n); // actually running our function. returns array of combination of column indexes of each rook
+  var validColumnIndexCombos = getValidColumnIndexCombos(n); // returns array of combination of column indexes of each rook
   console.log('Number of solutions for ' + n + ' rooks:', validColumnIndexCombos.length);
   return validColumnIndexCombos.length;
 };
@@ -69,7 +66,6 @@ window.findNQueensSolution = function(n) {
     var haveSetQueen = false;
     for (var i = 0; i < n; i++) { // loop through row indexes
       // (possible optimization, if queenIndex = 0 i.e. first queen, don't need to check for conflicts)
-
       board.togglePiece(i, queenIndex);
       if (board.hasAnyQueenConflictsOn(i, queenIndex)) {
         board.togglePiece(i, queenIndex);
@@ -83,12 +79,12 @@ window.findNQueensSolution = function(n) {
       }
     }
     // needs fixing - intended as way to preserve config if we reached end of array, break out of for loops and untoggle past pieces otherwise
-    if (haveSetQueen && !validConfig) {
-      board.togglePiece(i, queenIndex);
-      haveSetQueen = false;
-    } else {
-      break;
-    }
+    // if (haveSetQueen && !validConfig) {
+    //   board.togglePiece(i, queenIndex);
+    //   haveSetQueen = false;
+    // } else {
+    //   break;
+    // }
     return board;
   };
   // end of helper function

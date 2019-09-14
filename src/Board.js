@@ -197,7 +197,7 @@
         var rowIndex = minorDiagonalColumnIndexAtFirstRow - (n - 1);
       }
 
-      for (var i = colIndex; i > -1; i--) { // alternative method
+      for (var i = colIndex; i > -1; i--) {
         if (!this._isInBounds(colIndex, rowIndex)) {
           break;
         }
