@@ -54,33 +54,27 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  // helper function
-  var getValidBoardMatrix = function (n, board = new Board({n: n}), queenIndex = 0, validConfig = false) {
-    var haveSetQueen = false;
-    for (var i = 0; i < n; i++) { // loop through row indexes
-      // (possible optimization, if queenIndex = 0 i.e. first queen, don't need to check for conflicts)
-      board.togglePiece(i, queenIndex);
-      if (board.hasAnyQueenConflictsOn(i, queenIndex)) {
-        board.togglePiece(i, queenIndex);
-      } else { // hasAnyQueenConflictsOn is a method of the board class
-        haveSetQueen = true;
-        if (queenIndex === n - 1) {
-          validConfig = true;
+  var validComboFound = false;
+  var getValidBoardMatrix = function (n, board = new Board({n: n}), colIndex = 0) {
+    for (var i = 0; i < n; i++) {
+      if (validComboFound) {
+        return board;
+      }
+      board.togglePiece(i, colIndex);
+      if (!board.hasAnyQueenConflictsOn(i, colIndex)) {
+        if (colIndex < n - 1) {
+          board = getValidBoardMatrix(n, board, colIndex + 1);
         } else {
-          board = getValidBoardMatrix(n, board, queenIndex + 1);
+          validComboFound = true;
+          return board;
         }
       }
+      if (!validComboFound) {
+        board.togglePiece(i, colIndex);
+      }
     }
-    // needs fixing - intended as way to preserve config if we reached end of array, break out of for loops and untoggle past pieces otherwise
-    // if (haveSetQueen && !validConfig) {
-    //   board.togglePiece(i, queenIndex);
-    //   haveSetQueen = false;
-    // } else {
-    //   break;
-    // }
     return board;
   };
-  // end of helper function
 
   var validBoardMatrix = getValidBoardMatrix(n).rows();
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(validBoardMatrix));
@@ -89,8 +83,27 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
-
+  if (n === 0) {
+    return 1;
+  }
+  var solutionCount = 0; // keep track of valid board configurations
+  // helper function to iterate through possible configurations
+  var countCombos = function (n, board = new Board({n: n}), colIndex = 0) {
+    for (var i = 0; i < n; i++) {
+      board.togglePiece(i, colIndex);
+      if (!board.hasAnyQueenConflictsOn(i, colIndex)) {
+        if (colIndex < n - 1) {
+          board = countCombos(n, board, colIndex + 1);
+        } else {
+          solutionCount++;
+        }
+      }
+      board.togglePiece(i, colIndex);
+  
+    }
+    return board;
+  };
+  countCombos(n); // call helper function
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
